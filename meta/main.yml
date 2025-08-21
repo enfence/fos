@@ -8,9 +8,6 @@ galaxy_info:
 
   min_ansible_version: 2.15.0
 
-  platforms:
-    - name: Linux
-
   galaxy_tags:
     - brocade
     - fos
@@ -19,4 +16,3 @@ galaxy_info:
     - tools
 
 dependencies: []
-

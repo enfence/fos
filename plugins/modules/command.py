@@ -11,8 +11,11 @@ __metaclass__ = type
 DOCUMENTATION = r'''
 ---
 module: command
+
 short_description: This module enables SAN automation through the FOS CLI.
+
 version_added: "1.0.0"
+
 description:
     - This modules provides a mechanism for executing FOS commands via an Ansible task.
     - Each task will be a separate virtual terminal session.
@@ -32,8 +35,6 @@ description:
     - switch.  Since some commands affirm on change and others affirm on no change, it is up to
     - the user to indicate when change has and has not occurred.  Brocade will be providing
     - examples for many commands to indicate which options should be used with which commands.
-
-author: "Chip Copper (chip.copper@broadcom.com)""
 
 options:
     credential:
@@ -149,90 +150,91 @@ options:
                 required: False
                 default: -1 indicating the global value should be used.
 
+
+author: "Chip Copper (chip.copper@broadcom.com)"
 '''
 
 EXAMPLES = r'''
-  - name: run fos commands
-    enfence.fos.command:
-      credential:
-          fos_username: {{ username}}
-          fos_password: {{ password }}
-          fos_ip_addr: {{ switch_ip_address }}
-      commands:
-        # 
-        - cmd: timeout 30
-          start_state:
-            - flag: changed
-              value: True
+- name: run fos commands
+  enfence.fos.command:
+    credential:
+      fos_username: {{ username}}
+      fos_password: {{ password }}
+      fos_ip_addr: {{ switch_ip_address }}
+    commands:
+      - cmd: timeout 30
+        start_state:
+          - flag: changed
+            value: true
 
-        - cmd: defzone --allaccess
-          prompts:
-            - question: Do you want to
-              response: "yes"
+      - cmd: defzone --allaccess
+        prompts:
+          - question: Do you want to
+            response: "yes"
 
-        - cmd: cfgsave
-          prompts:
-            - question: Do you want to
-              response: "yes"
+      - cmd: cfgsave
+        prompts:
+          - question: Do you want to
+            response: "yes"
 
-        - cmd: dnsconfig --add -domain mydomain.com -serverip1 8.8.8.8 -serverip2 8.8.4.4
+      - cmd: dnsconfig --add -domain mydomain.com -serverip1 8.8.8.8 -serverip2 8.8.4.4
 
-        - cmd: tstimezone America/Chicago
+      - cmd: tstimezone America/Chicago
 
-        - cmd: switchdisable
+      - cmd: switchdisable
 
-        - cmd: switchenable
+      - cmd: switchenable
 
-        - cmd: 'portname -d "C.T.A.R"'
+      - cmd: 'portname -d "C.T.A.R"'
 
-        - cmd: fabricprincipal --enable -p 0x03 -f
+      - cmd: fabricprincipal --enable -p 0x03 -f
 
-        - cmd: creditrecovmode --cfg onLrOnly
+      - cmd: creditrecovmode --cfg onLrOnly
 
-        - cmd: dlsset --enable -lossless
+      - cmd: dlsset --enable -lossless
 
-        - cmd: bannerset
-          prompts:
-            - question: Please input content of security banner
-              response: "This is to demo the banner set command.\n."
+      - cmd: bannerset
+        prompts:
+          - question: Please input content of security banner
+            response: "This is to demo the banner set command.\n."
 
-        - cmd: ipfilter --clone ipv4_telnet_http -from default_ipv4
-        - cmd: ipfilter --delrule ipv4_telnet_http -rule 2
-        - cmd: ipfilter --addrule ipv4_telnet_http -rule 2 -sip any -dp 23 -proto tcp -act deny
-        - cmd: ipfilter --activate ipv4_telnet_http 
-        - cmd: ipfilter --show
+      - cmd: ipfilter --clone ipv4_telnet_http -from default_ipv4
+      - cmd: ipfilter --delrule ipv4_telnet_http -rule 2
+      - cmd: ipfilter --addrule ipv4_telnet_http -rule 2 -sip any -dp 23 -proto tcp -act deny
+      - cmd: ipfilter --activate ipv4_telnet_http 
+      - cmd: ipfilter --show
 
-        - cmd: snmpconfig --set systemgroup
-          prompts:
-            - question: sysDescr
-              response: DemoSwitch
-            - question: sysLocation
-              response: San Jose
-            - question: sysContact
-              response: ""
-            - question: authTrapEnabled
-              response: "true"
+      - cmd: snmpconfig --set systemgroup
+        prompts:
+          - question: sysDescr
+            response: DemoSwitch
+          - question: sysLocation
+            response: San Jose
+          - question: sysContact
+            response: ""
+          - question: authTrapEnabled
+            response: "true"
 
-        - cmd: auditcfg --class 1,2,3,4,5,8,9
+      - cmd: auditcfg --class 1,2,3,4,5,8,9
 
-        - cmd: syslogadmin --set -ip 10.155.2.151
+      - cmd: syslogadmin --set -ip 10.155.2.151
 '''
 
 RETURN = r'''
 messages:
-    description: Log of the terminal session.
-    returned: always
-    type: list
-    sample: 
-      - "SW170_X6-4:FID128:admin> timeout 30",
-      - "IDLE Timeout Changed to 30 minutes",
-      - "The modified IDLE Timeout will be in effect after NEXT login",
-      - "SW170_X6-4:FID128:admin> defzone --allaccess",
-      - "You are about to set the Default Zone access mode to All Access",
-      - "Do you want to set the Default Zone access mode to All Access ? (yes, y, no, n): [no] yes",
-      - "defzone setting is same and nothing to update.",
-      - "",
-      - "SW170_X6-4:FID128:admin>
+  description: Log of the terminal session.
+  returned: always
+  type: list
+  sample: 
+    - "SW170_X6-4:FID128:admin> timeout 30"
+    - "IDLE Timeout Changed to 30 minutes"
+    - "The modified IDLE Timeout will be in effect after NEXT login"
+    - "SW170_X6-4:FID128:admin> defzone --allaccess"
+    - "You are about to set the Default Zone access mode to All Access"
+    - "Do you want to set the Default Zone access mode to All Access ? (yes, y, no, n): [no] yes"
+    - "defzone setting is same and nothing to update."
+    - ""
+    - "SW170_X6-4:FID128:admin>"
 '''
 
 from ansible.module_utils.basic import AnsibleModule
